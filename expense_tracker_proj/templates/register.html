@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register - An Inner Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f9f9f9, #e0e0e0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .register-container {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .register-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .register-container form input {
+      width: 100%;
+      padding: 0.7rem;
+      margin: 0.5rem 0 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .register-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #000;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .register-container button:hover {
+      background: #444;
+    }
+
+    .errorlist {
+      color: red;
+      font-size: 0.9rem;
+      margin: -0.5rem 0 1rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .messages {
+      margin-bottom: 20px;
+    }
+
+    .alert {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .alert-error {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+      background-color: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Register to expense calculator</h2>
+    <form method="POST" action="">
+      {% csrf_token %}
+      {{ forms.non_field_errors }}
+
+      <label for="id_username">Username</label>
+      {{ forms.username }}
+      {{ forms.username.errors }}
+
+      <label for="id_email">Email</label>
+      {{ forms.email }}
+      {{ forms.email.errors }}
+
+      <label for="id_password1">Password</label>
+      {{ forms.password1 }}
+      {{ forms.password1.errors }}
+
+      <label for="id_password2">Confirm Password</label>
+      {{ forms.password2 }}
+      {{ forms.password2.errors }}
+
+      <button type="submit">Register</button>
+    </form>
+    <div class="login-switch">
+      Already have an account? <a href="{% url 'login_user' %}">Login here</a>
+    </div>
+     <div class="btn-container">
+                <a href="{% url 'home' %}" class="back-btn"> ← Back </a>
+
+            </div>
+    
+  </div>
+</body>
+</html>

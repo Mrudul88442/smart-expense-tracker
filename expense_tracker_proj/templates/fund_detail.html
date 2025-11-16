@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>{{ scheme_info.scheme_name }}</h2>
+  {% if latest_nav %}
+  <p><strong>Scheme Code:</strong> {{ scheme_info.scheme_code }}</p>
+  <p><strong>Last NAV:</strong> ₹{{ latest_nav.nav }}</p>
+  <p><strong>Date:</strong> {{ latest_nav.date }}</p>
+  <a href="#" class="btn btn-success mt-3">Add to My Portfolio</a>
+  {% else %}
+  <p>No NAV data available for this fund.</p>
+  {% endif %}
+</div>
+{% endblock %}

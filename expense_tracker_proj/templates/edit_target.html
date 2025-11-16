@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✏️ Edit Target</title>
+    <style>
+        body {
+            background: url("{% static 'images/backgroundtarget.jpg' %}") no-repeat center center/cover;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 80px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 50px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0b3d3d;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #145c5c;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #145c5c;
+        }
+
+        button {
+            background-color: #145c5c;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0f3c3c;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #145c5c;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✏️ Edit Target</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+    <label for="title">Target Title:</label>
+    <input type="text" id="title" name="title" value="{{ target.title }}" required>
+
+        <label for="goal_amount">Goal Amount (₹):</label>
+        <input type="number" id="goal_amount" name="goal_amount" value="{{ target.goal_amount }}" required>
+
+        <label for="target_date">Target Date:</label>
+        <input type="date" id="target_date" name="target_date" value="{{ target.target_date|date:'Y-m-d' }}" required>
+
+        <button type="submit">💾 Save Changes</button>
+    </form>
+
+    <a href="{% url 'target_dashboard' %}" class="back-link">← Back to Target Dashboard</a>
+</div>
+
+</body>
+</html>

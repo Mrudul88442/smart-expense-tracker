@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Todo</title>
+    <style>
+        body {
+            background: url("{% static 'images/todobg2.jpg' %}") no-repeat center center/cover;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 40%;
+            margin: 100px auto;
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #0b3d3d;
+            margin-bottom: 30px;
+        }
+        label { font-weight: 600; color: #145c5c; }
+        input[type="text"], input[type="date"] {
+            width: 100%; padding: 10px; margin-bottom: 20px;
+            border-radius: 8px; border: 1px solid #ccc;
+        }
+        button {
+            background: #145c5c; color: white;
+            padding: 10px 18px; border: none;
+            border-radius: 6px; cursor: pointer;
+        }
+        button:hover { background: #0f3c3c; }
+        a { color: #145c5c; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>➕ Add New To-Do</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Description:</label>
+            <input type="text" name="description" placeholder="Enter your task" required>
+            <label>Date:</label>
+            <input type="date" name="date">
+            <button type="submit">Save Todo</button>
+        </form>
+        <br>
+        <a href="{% url 'todos_home' %}">← Back to To-Do List</a>
+    </div>
+</body>
+</html>

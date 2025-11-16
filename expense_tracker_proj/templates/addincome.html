@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>➕ Add income</title>
+    <style>
+        body {
+            background: url("{% static 'images\incomebackground2.jpg' %}") no-repeat center center/cover;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 45%;
+            margin: 80px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0b3d3d;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #145c5c;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            border-color: #145c5c;
+            outline: none;
+            box-shadow: 0 0 4px rgba(20, 92, 92, 0.4);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background-color: #145c5c;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0f3c3c;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #145c5c;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #0f3c3c;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Add New Income</h1>
+        <form action="{% url 'add_income' %}" method="POST">
+            {% csrf_token %}
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" placeholder="Income Title" required>
+
+            <label for="amount">Amount (₹):</label>
+            <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Investments">Investments</option>
+                <option value="Business">Business</option>
+                <option value="Rental Income">Rental Income</option>
+                <option value="Gifts">Gifts</option>
+                <option value="Bonuses">Bonuses</option>
+                <option value="Interest">Interest</option>
+                <option value="Savings Withdrawal">Savings Withdrawal</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+
+            <button type="submit">Save Income</button>
+        </form>
+<br>
+        <a href="{% url 'income' %}">← Back to Income Dashboard</a>
+    </div>
+</body>
+</html>

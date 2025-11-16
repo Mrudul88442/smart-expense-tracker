@@ -1,0 +1,253 @@
+// {% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url("{% static 'images/mutualfundsbg.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0);
+    z-index: -1;
+  }
+  .container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    max-width: 1200px;
+  }
+  h2 {
+    text-align: center;
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  p {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+  .search-form {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .search-form input {
+    padding: 12px;
+    width: 60%;
+    border: 2px solid #ddd;
+    border-radius: 25px 0 0 25px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  .search-form input:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+  .search-form button {
+    background-color: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  .search-form button:hover {
+    background-color: #5a6fd8;
+  }
+  
+  /* Portfolio button */
+  .portfolio-btn {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+  }
+  .portfolio-btn:hover {
+    background-color: #218838;
+  }
+
+  /* Back to Dashboard button */
+  .back-dashboard-btn {
+    display: inline-block;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    margin-right: 10px;
+  }
+  .back-dashboard-btn:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Fund card container */
+  .fund-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 30px;
+    margin: 15px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e9ecef;
+    gap: 30px;
+  }
+  /* Fund name and image */
+  .fund-info {
+    display: flex;
+    align-items: center;
+    flex: 1 1 35%;
+  }
+  .fund-info img {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .fund-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Stats container: uses a grid with two columns for labels and values */
+  .fund-stats {
+    flex: 1 1 40%;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 30px;
+    row-gap: 8px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    align-items: center;
+  }
+  .fund-stats .label {
+    font-weight: 500;
+    color: #888;
+    text-align: right;
+  }
+  .fund-stats .value {
+    font-weight: 700;
+    color: #000;
+  }
+  .fund-stats .value.return {
+    font-weight: 700;
+    color: #28a745;
+  }
+
+  /* Add button */
+  .add-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .add-btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .fund-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .fund-info {
+      flex: none;
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .fund-stats {
+      grid-template-columns: auto auto;
+      width: 100%;
+    }
+    .add-btn {
+      align-self: center;
+      width: 100%;
+    }
+    .portfolio-btn, .back-dashboard-btn {
+      width: 100%;
+      text-align: center;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+</style>
+
+<div class="container">
+  <h2>💹 Mutual Funds Dashboard</h2>
+  <p>Welcome {{ user.username }}! Search and track your favorite mutual funds below.</p>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <a href="{% url 'home' %}" class="back-dashboard-btn">← Back to Dashboard</a>
+    <a href="{% url 'my_portfolio' %}" class="portfolio-btn">My Portfolio</a>
+  </div>
+
+  <form method="GET" action="{% url 'mutualfunds_dashboard' %}" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search mutual funds...">
+    <button type="submit">Search</button>
+  </form>
+
+  <h2 class="funds-section">Top 20 Mutual Funds{% if query %} matching "{{ query }}"{% endif %}</h2>
+
+  <div style="width: 90%; margin: auto;">
+    {% for fund in funds %}
+      <div class="fund-card">
+        <div class="fund-info">
+          <img src="{% static 'mutualfunds/icons/'|add:fund.icon %}" alt="{{ fund.name }}">
+          <div class="fund-name">{{ fund.name }}</div>
+        </div>
+
+        <div class="fund-stats">
+          <div class="label">Fund Size</div>
+          <div class="value">₹{{ fund.fund_size }} Cr</div>
+          <div class="label">Return (p.a)</div>
+          <div class="value return">+ {{ fund.return_pa }}%</div>
+        </div>
+        <a href="{% url 'add_to_portfolio' fund.scheme_code %}" class="add-btn">Add to Portfolio</a>
+      </div>
+    {% empty %}
+      <p class="no-funds" style="text-align:center;">No mutual funds found for your search.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker | Dashboard</title>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background-color: #f4f7fb;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: #d6d8de;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.4s ease;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      z-index: 5;
+    }
+
+    /* Sidebar hidden initially */
+    .sidebar.hidden {
+      transform: translateX(-260px);
+    }
+
+    .nav-section {
+      margin-bottom: 40px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      color: #0a0aff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-item:hover {
+      color: #0047ff;
+      transform: translateX(4px);
+    }
+
+    .nav-item i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      width: 100%;
+      padding: 40px;
+      background: url("{% static 'images/dashboardbackgroundimage.jpg' %}") no-repeat center center/cover;
+      position: relative;
+      overflow-y: auto;
+      transition: margin-left 0.4s ease;
+    }
+
+    .main-content::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+    }
+
+    .main-content h1,
+    .summary-cards,
+    .chart-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .main-content h1 {
+      font-size: 28px;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Profile Button */
+    .profile-btn {
+       background: url("{% static 'images/ailogo.jpg' %}") no-repeat center center/cover;
+      position: absolute;
+      top: 150px;
+      right: 40px;
+      background-color: #d6d8de;
+      color: white;
+      border: none;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 26px;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    .profile-btn:hover,
+    .profile-btn:focus {
+      background-color: #0f3c3c;
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    /* All (Hamburger) Button */
+    .menu-btn {
+      position: absolute;
+      top: 25px;
+      left: 30px;
+      background-color: #145c5c;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      z-index: 6;
+      transition: background 0.3s ease, transform 0.2s, left 0.4s ease;
+    }
+
+    .menu-btn:hover,
+    .menu-btn:focus {
+      background-color: #0f3c3c;
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    .menu-btn i {
+      font-size: 20px;
+    }
+
+    /* When sidebar is visible → shift button */
+    .menu-btn.shifted {
+      left: 280px;
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 80px;
+      flex-wrap: wrap;
+      margin-top: 80px;
+      margin-bottom: 50px; /* Space before other elements */
+    }
+
+    .card {
+      width: 350px;
+      border-radius: 30px;
+      color: white;
+      text-align: center;
+      padding: 25px 10px;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .green { background-color: #22b573; }
+    .red { background-color: #d9534f; }
+    .dark-blue { background-color: #4e6298; }
+    .teal { background-color: #145c5c; }
+
+    .value { font-size: 28px; }
+
+    /* Todo Section - Fixed position to prevent shifting */
+    .todo-section {
+      position: fixed; /* Changed from absolute to fixed for steady positioning */
+      bottom: 400px; /* Above transaction history */
+      right: 30px;
+      width: 750px;
+      max-height: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      overflow: hidden;
+      z-index: 2;
+      backdrop-filter: blur(6px);
+    }
+
+    .todo-section h2 {
+      font-size: 1.2rem;
+      color: #ff0000;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .todo-list {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+
+    .todo-item:hover {
+      background: rgba(241, 7, 7, 0.05);
+    }
+
+    .todo-item.done {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .todo-checkbox {
+      margin-right: 10px;
+      transform: scale(1.1);
+    }
+
+    .todo-details {
+      flex: 1;
+    }
+
+    .todo-description {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .todo-date {
+      font-size: 0.8rem;
+      color: #f40505;
+    }
+
+    .todo-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .delete-btn {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .delete-btn:hover {
+      background-color: #c9302c;
+    }
+
+    /* 🧾 Transaction History Table - Fixed position to prevent shifting */
+    .transaction-history {
+      position: fixed; /* Changed from absolute to fixed for steady positioning */
+      bottom: 50px;
+      right: 30px;
+      width: 750px;
+      max-height: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      overflow: hidden;
+      z-index: 3;
+      backdrop-filter: blur(6px);
+    }
+
+    .transaction-history h2 {
+      font-size: 1.2rem;
+      color: #145c5c;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* 📊 Table Style */
+    .transaction-history table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .transaction-history th, 
+    .transaction-history td {
+      padding: 8px 10px;
+      text-align: center;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* 💵 Colored Amounts */
+    .income-amount { color: #00c853; font-weight: 600; }
+    .expense-amount { color: #d50000; font-weight: 600; }
+    .saving-amount { color: #007bff; font-weight: 600; }
+
+    /* 🏷️ Type Badges */
+    .type-badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .income-badge { background-color: #00c853; }
+    .expense-badge { background-color: #d50000; }
+    .saving-badge { background-color: #007bff; }
+
+    /* 📜 Scrollable */
+    .table-container {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .chart-container {
+  text-align: center;
+  margin-top: 70px; /* Adjust for vertical position (e.g., increase for lower, decrease for higher) */
+  margin-left: auto; /* Center horizontally; change to specific value for left/right shift */
+  margin-right: 700px;
+  /* Add position: relative; or absolute/fixed if needed for custom positioning */
+}
+
+.chart-container {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.chart-wrapper {
+  width: 500px;              /* Increase width */
+  height: 500px;             /* Increase height */
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas#financeChart {
+  width: 500px !important;   /* Make chart larger */
+  height: 500px !important;  /* Keep proportions */
+}
+
+
+
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar hidden" id="sidebar">
+    <div>
+      <div class="nav-section">
+        <h4>FEATURES </h4>
+        <a href="{% url 'home' %}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="{% url 'chat_page' %}" class="nav-item"><i class="fas fa-home"></i> finance ai</a>
+     
+        <a href="{% url 'target_dashboard' %}" class="nav-item"><i class="fas fa-bullseye"></i> Targets</a>
+        <a href="{% url 'mutualfunds_dashboard' %}" class="nav-item">Mutual Funds</a>
+      </div>
+
+      <div class="nav-section">
+        <h4>SUMMARY</h4>
+        <a href="{% url 'expenses' %}" class="nav-item"> Expense Summary</a>
+        <a href="{% url 'income' %}" class="nav-item"> Income Summary</a>
+      </div>
+
+     <div class="nav-section">
+  <h4>ACCOUNT</h4>
+  {% if user.is_authenticated %}
+      <a href="{% url 'logout_user' %}" class="nav-item">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+  {% else %}
+      <a href="{% url 'login_user' %}" class="nav-item">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+      <a href="{% url 'register_user' %}" class="nav-item">
+        <i class="fas fa-user-plus"></i> Register
+      </a>
+  {% endif %}
+</div>
+
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <button class="menu-btn" id="menu-btn">
+      <i class="fas fa-bars"></i> ☰ All
+    </button>
+
+    <a href="financial_ai"><button class="profile-btn" > </button></a>
+
+    <h1>Welcome to Your Expense Tracker</h1>
+
+    <div class="summary-cards">
+      <a href="transaction_history" style="text-decoration:none;">
+        <div class="card dark-blue">
+          <h2><i class="fas fa-wallet"></i> CURRENT BALANCE</h2>
+          <div class="value">₹{{ current_balance }}</div>
+        </div>
+      </a>
+
+      <a href="{% url 'income' %}" style="text-decoration:none;">
+        <div class="card green">
+          <h3>TOTAL INCOME</h3>
+          <div class="value">₹{{ total_income }}</div>
+        </div>
+      </a>
+
+      <a href="{% url 'expenses' %}" style="text-decoration:none;">
+        <div class="card red">
+          <h3>TOTAL EXPENSE</h3>
+          <div class="value">₹{{ total_expense }}</div>
+        </div>
+      </a>
+
+      <a href="{% url 'savings' %}" style="text-decoration:none;">
+        <div class="card teal">
+          <h3>TOTAL SAVINGS</h3>
+          <div class="value">₹{{ total_saving }}</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Pie Chart Section -->
+   <!-- 📊 Pie Chart Section -->
+<div class="chart-container">
+  <h2 style="color:white;">Expense Overview</h2>
+
+  <!-- Dropdown -->
+  <label for="chart-period" style="color:white;">Select Period:</label>
+  <select id="chart-period" 
+          style="background:#1a1a1a; color:white; border-radius:8px; padding:5px 10px; margin-left:10px;">
+    <option value="over all">over all</option>
+    <option value="this_week">This Week</option>
+    <option value="this_month">This Month</option>
+    <option value="this_year">This Year</option>
+  </select>
+
+  <!-- Wrapper for Chart -->
+  <div class="chart-wrapper">
+    <canvas id="financeChart"></canvas>
+  </div>
+</div>
+
+
+    <!-- Todo Section - Fixed position to prevent shifting -->
+    <a href="add_todo"><div class="todo-section">
+      <h2>📝 REMINDERS </h2>
+      <div class="todo-list">
+        {% for todo in todos %}
+        <div class="todo-item {% if todo.is_done %}done{% endif %}">
+          <form method="post" action="{% url 'toggle_todo' todo.id %}" style="display: inline;">
+            {% csrf_token %}
+            <input type="checkbox" class="todo-checkbox" onchange="this.form.submit()" {% if todo.is_done %}checked{% endif %}>
+          </form>
+          <div class="todo-details">
+            <div class="todo-description">{{ todo.description }}</div>
+            <div class="todo-date">{{ todo.date|date:"M d, Y" }}</div>
+          </div>
+          <div class="todo-actions">
+            <form method="post" action="{% url 'delete_todo' todo.id %}">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <p>No todos yet.</p>
+        {% endfor %}
+      </div>
+    </div></a>
+
+    <!-- 🧾 Transaction History Table - Fixed position to prevent shifting -->
+    <a href='transaction_history'>
+      <div class="transaction-history">
+        <h2>💳 Transaction History</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in transactions %}
+              <tr>
+                <td>{{ t.title }}</td>
+                <td>
+                  <span class="type-badge 
+                    {% if t.transaction_type == 'Income' %}income-badge
+                    {% elif t.transaction_type == 'Expense' %}expense-badge
+                    {% elif t.transaction_type == 'Saving' %}saving-badge
+                    {% endif %}
+                  ">
+                    {{ t.transaction_type }}
+                  </span>
+                </td>
+                <td class="
+                  {% if t.transaction_type == 'Income' %}income-amount
+                  {% elif t.transaction_type == 'Expense' %}expense-amount
+                  {% elif t.transaction_type == 'Saving' %}saving-amount
+                  {% endif %}
+                ">
+                  ₹{{ t.amount }}
+                </td>
+                <td>{{ t.date|date:"M d, Y - H:i" }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4">No recent transactions found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- JavaScript for sliding effect -->
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+      menuBtn.classList.toggle('shifted');
+    });
+  </script>
+
+  <!-- Chart Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ctx = document.getElementById('financeChart').getContext('2d');
+
+      // Ensure numbers are safe (replace None with 0)
+      const safe = (val) => isNaN(parseFloat(val)) ? 0 : parseFloat(val);
+
+      // Data from Django context (match dropdown options)
+      const chartData = {
+        today: [safe({{ total_income|default:0 }}), safe({{ total_expense|default:0 }}), safe({{ total_saving|default:0 }})],
+        this_week: [safe({{ income_this_week|default:0 }}), safe({{ expense_this_week|default:0 }}), safe({{ saving_this_week|default:0 }})],
+        this_month: [safe({{ income_this_month|default:0 }}), safe({{ expense_this_month|default:0 }}), safe({{ saving_this_month|default:0 }})],
+        this_year: [safe({{ income_this_year|default:0 }}), safe({{ expense_this_year|default:0 }}), safe({{ saving_this_year|default:0 }})],
+      };
+      let financeChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Income', 'Expense', 'Saving'],
+          datasets: [{
+            data: chartData['today'],
+            backgroundColor: ['#00c853', '#d50000', '#007bff'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: {
+              display: true,
+              text: 'Financial Overview'
+            }
+          }
+        }
+      });
+      // Update chart on dropdown change
+      document.getElementById('chart-period').addEventListener('change', function () {
+        const period = this.value;
+        financeChart.data.datasets[0].data = chartData[period];
+        financeChart.update();
+      });
+    });
+  </script>
+</body>
+</html>

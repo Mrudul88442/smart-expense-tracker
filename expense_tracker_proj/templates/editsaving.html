@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Saving | Expense Tracker</title>
+
+  <style>
+    /* 🌿 GLOBAL */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background: url("{% static 'images/dashboardbackgroundimage.jpg' %}") no-repeat center center/cover;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.85);
+      z-index: 0;
+    }
+
+    /* 🧩 Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      background-color: #ffffff;
+      width: 430px;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+      border-top: 6px solid #198754;
+      text-align: center;
+    }
+
+    .container h2 {
+      color: #198754;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+
+    /* ✍️ Form Inputs */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #198754;
+      box-shadow: 0 0 4px #19875480;
+    }
+
+    /* 💾 Buttons */
+    .btn {
+      padding: 12px;
+      background-color: #198754;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #157347;
+      transform: scale(1.03);
+    }
+
+    .cancel-btn {
+      margin-top: 10px;
+      display: inline-block;
+      text-decoration: none;
+      color: #157347;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .cancel-btn:hover {
+      color: #0f5132;
+      text-decoration: underline;
+    }
+
+    /* ✨ Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 500px) {
+      .container {
+        width: 90%;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>✏️ Edit Saving</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="title" value="{{ saving.title }}" placeholder="Saving Title" required>
+      <input type="number" name="amount" step="0.01" value="{{ saving.amount }}" placeholder="Amount (₹)" required>
+
+      <!-- 🏦 Dropdown -->
+      <select name="category" required>
+        <option value="">-- Select Saving Category --</option>
+        <option value="Emergency Fund" {% if saving.category == "Emergency Fund" %}selected{% endif %}>Emergency Fund</option>
+        <option value="Travel" {% if saving.category == "Travel" %}selected{% endif %}>Travel</option>
+        <option value="Investment" {% if saving.category == "Investment" %}selected{% endif %}>Investment</option>
+        <option value="Education" {% if saving.category == "Education" %}selected{% endif %}>Education</option>
+        <option value="Others" {% if saving.category == "Others" %}selected{% endif %}>Others</option>
+      </select>
+
+      <input type="date" name="date" value="{{ saving.date|date:'Y-m-d' }}" required>
+
+      <button type="submit" class="btn">Update Saving</button>
+    </form>
+
+    <a href="{% url 'savings' %}" class="cancel-btn">← Back to Savings</a>
+  </div>
+</body>
+</html>

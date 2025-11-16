@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Expense Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+
+    <style>
+        header h1 {
+            color: white;  /* TEXT IN WHITE */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{% block header %}Expense Tracker{% endblock %}</h1>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Expense Tracker</p>
+    </footer>
+</body>
+</html>
