@@ -1,6 +1,9 @@
 # Expense Tracker
 
 A Django-based personal expense tracking application with support for multiple financial features including expenses, income, savings, investment goals, mutual funds, and an AI financial advisor.
+# Expense Tracker
+
+A Django-based personal expense tracking application with support for multiple financial features including expenses, income, savings, investment goals, mutual funds, and an AI financial advisor.
 
 ## Features
 
@@ -80,11 +83,15 @@ expense_tracker/
 │   ├── settings.py            # Project settings
 │   ├── urls.py                # URL routing
 │   ├── wsgi.py
-│   ├── app/                   # Expense app
+2. Create and activate virtual environment (or use the included `setup.ps1` script for Windows):
 │   ├── home/                  # Home/dashboard app
-│   ├── income/                # Income app
-│   ├── savings/               # Savings app
-│   ├── targets/               # Financial targets app
+   # On Windows you can run the provided script:
+   .\setup.ps1
+
+   # Or do it manually:
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1  # On Windows
+   source venv/bin/activate      # On macOS/Linux
 │   ├── accounts/              # User authentication
 │   ├── todos/                 # Todo/reminders app
 │   ├── mutualfunds/           # Mutual funds app
@@ -112,7 +119,27 @@ expense_tracker/
 3. Monitor progress on dashboard
 
 ### View Investment Portfolio
-1. Go to Mutual Funds
+For AI features and secure configuration, you should set environment variables. We provide a `.env.example` that you can copy to `.env`.
+
+Example values to set (in `.env` file):
+```
+DJANGO_SECRET_KEY=your-secret-key-here
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+FINANCIAL_AI_API_KEY=your_google_gemini_api_key
+```
+
+On Windows PowerShell you can set the environment variable for a single session:
+
+```powershell
+$env:FINANCIAL_AI_API_KEY = "your_google_gemini_api_key"
+```
+
+Or permanently using `setx`:
+
+```powershell
+setx FINANCIAL_AI_API_KEY "your_google_gemini_api_key"
+```
 2. Search for funds
 3. Add funds to portfolio
 4. Monitor current NAV and profit/loss
