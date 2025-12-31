@@ -1,3 +1,5 @@
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/6686bbfe-6d1a-479f-b83f-fbdbfe5a94f8" />
+
 # Expense Tracker
 
 A Django-based personal expense tracking application with support for multiple financial features including expenses, income, savings, investment goals, mutual funds, and an AI financial advisor.
