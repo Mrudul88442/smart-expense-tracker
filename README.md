@@ -1,4 +1,16 @@
-<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/6686bbfe-6d1a-479f-b83f-fbdbfe5a94f8" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/5e890ea6-ab01-4391-9085-60c6ca4f0b83" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/34d33497-9b8a-4b27-9e6d-105961755d08" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/effff466-5ce3-4199-8662-f5b799508674" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/e81c0501-cf93-452d-9000-71ddc5f78813" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/bfcb021c-e32d-48ce-be4f-3569596dca1c" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/fa142d42-3cce-4e71-8780-366160873da2" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/598daccd-7fe5-4bb5-867e-c629ebec2626" />
+
+
+
+
+
+
 
 # Expense Tracker
 
