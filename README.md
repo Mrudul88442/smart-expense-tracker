@@ -12,10 +12,10 @@
 
 
 
-# Expense Tracker
+# smart Expense Tracker
 
 A Django-based personal expense tracking application with support for multiple financial features including expenses, income, savings, investment goals, mutual funds, and an AI financial advisor.
-# Expense Tracker
+# smart Expense Tracker
 
 A Django-based personal expense tracking application with support for multiple financial features including expenses, income, savings, investment goals, mutual funds, and an AI financial advisor.
 
